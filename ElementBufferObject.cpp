@@ -44,6 +44,7 @@ int ElementBufferObject::getTriangleDataLen() const{
 }
 
 void ElementBufferObject::vertexAttrib(int n, int length) {
+    glBindVertexArray(VAO);
     glVertexAttribPointer(n, length, GL_FLOAT, GL_FALSE, vertexLen*sizeof(float), (void*)currentVarOffset);
     glEnableVertexAttribArray(n);
     currentVarOffset += length*sizeof(float);

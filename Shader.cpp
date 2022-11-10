@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include <exception>
+#include "glm/gtc/type_ptr.hpp"
 
 unsigned int Shader::compileShader(unsigned short shaderType, const char* source){
     unsigned int shader = glCreateShader(shaderType);
@@ -63,7 +64,6 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) n
 
 
     unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource.c_str());
-    std::cout<<"Foo!";
     unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource.c_str());
     unsigned int shaders[] = {vertexShader, fragmentShader};
 
@@ -78,10 +78,18 @@ void Shader::enable() const{
     glUseProgram(shaderProgram);
 }
 
+
+
+void Shader::setUniform(std::string uniformName, glm::mat4 matrix) const {
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 std::optional<Shader> Shader::BasicColorVertexShader;
+std::optional<Shader> Shader::BasicTextureShader;
 
 void Shader::initShaders(){
-    Shader::BasicColorVertexShader = Shader("../BasicColorVertexVertexShader.shader","../BasicColorVertexFragShader.shader");
+    Shader::BasicColorVertexShader = Shader("../shaders/BasicColorVertexVertexShader.shader","../shaders/BasicColorVertexFragShader.shader");
+    Shader::BasicTextureShader = Shader("../shaders/BasicTextureVShader.glsl", "../shaders/BasicTextureFShader.glsl");
 }
 
 

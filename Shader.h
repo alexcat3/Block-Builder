@@ -7,6 +7,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <glfw3.h>
+#include "glm/glm.hpp"
 #include <fstream>
 #include <optional>
 
@@ -19,8 +20,11 @@ public:
     Shader(const std::string &vertexPath, const std::string &fragmentPath) noexcept;
     void enable() const;
 
+    void setUniform(std::string uniformName, glm::mat4 matrix) const;
+
     //Standard shaders that can be used
     static std::optional<Shader> BasicColorVertexShader;
+    static std::optional<Shader> BasicTextureShader;
 
     //Compiles the standard shaders
     static void initShaders();
