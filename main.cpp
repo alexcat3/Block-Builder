@@ -1,10 +1,13 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <glad/glad.h>
 #include <glfw3.h>
 #include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/string_cast.hpp"
 #include "Shader.h"
 #include "ElementBufferObject.h"
 #include "Texture.h"
@@ -21,74 +24,110 @@ int main() {
     GLFWwindow* window = initWindow(800,600);
     Shader::initShaders();
 
-    vector<float> rect1_vertices = {
-            // x, y, z, r, g, b
-            0.5, 0.5, 0, 1, 0, 0,
-            0.5, -.5, 0, 0, 1, 0,
-            -.5, -.5 ,0, 0, 0, 1,
-            -.5, 0.5, 0, 1, 1, 1,
-    };
-    int rect1_vertexLen = 6;
-    vector<unsigned int> rect1_triangles{
-        0,1,3, //first triangle
-        1,2,3 //second triangle
-    };
-    ElementBufferObject rect1(rect1_vertices, rect1_vertexLen, rect1_triangles);
-    //Each vertex's position is a set of 3 floats
-    rect1.vertexAttrib(0, 3);
-    //Each vertex's color is a set of 3 floats
-    rect1.vertexAttrib(1, 3);
-
-    vector<float> rect2_vertices{
+    vector<float> cube_vertices{
         //x,y,z,tx,ty
-        -1, 1,0,0,1,
-         1, 1,0,1,1,
-         1,-1,0,1,0,
-        -1,-1,0,0,0
+        //front face
+        -1,-1, 1,0,0,
+        -1, 1, 1,0,1,
+         1, 1, 1,1,1,
+         1,-1, 1,1,0,
+
+         //back face
+       -1,-1, -1,0,0,
+       -1, 1, -1,0,1,
+        1, 1, -1,1,1,
+        1,-1, -1,1,0,
+
+        //top face
+        -1, 1, 1,0,0,
+        -1, 1,-1,0,1,
+         1, 1,-1,1,1,
+         1, 1, 1,1,0,
+
+         //bottom face
+         -1,-1, 1,0,0,
+         -1,-1,-1,0,1,
+          1,-1,-1,1,1,
+          1,-1, 1,1,0,
+
+        //left face
+        -1,-1,-1,0,0,
+        -1, 1,-1,0,1,
+        -1, 1, 1,1,1,
+        -1,-1, 1,1,0,
+
+
+
+        //right face
+        1,-1,-1,0,0,
+        1, 1,-1,0,1,
+        1, 1, 1,1,1,
+        1,-1, 1,1,0
     };
-    vector<unsigned int> rect2_triangles{
+
+    vector<unsigned int> cube_triangles{
+        //Front face
         0,1,2,
-        3,0,2
+        2,3,0,
+        //Back face
+        4,5,6,
+        6,7,4,
+        //Top face
+        8,9,10,
+        10,11,8,
+        //Bottom face
+        12,13,14,
+        14,15,12,
+        //Left face
+        16,17,18,
+        18,19,16,
+        //Right face
+        20,21,22,
+        22,23,20
     };
-    ElementBufferObject rect2(rect2_vertices,5,rect2_triangles);
-    //Each vertex's position is a set of 3 floats
-    rect2.vertexAttrib(0,3);
-    //Each vertex's texture position is a set of 2 floats
-    rect2.vertexAttrib(1,2);
+    ElementBufferObject cube(cube_vertices, 5, cube_triangles);
+    cube.vertexAttrib(0,3); //Location is a set of 3 verticies
+    cube.vertexAttrib(1,2); //Texture coordinate is a set of 2 verticies
 
     Texture containerTexture("../container.jpg",{});
-    containerTexture.bind();
 
-    //Create a transformation for rect2
-    //It scales it down to 25% of its size and rotates it around the z axis
-    glm::vec4 vec(1, 0, 0, 1);
-    glm::mat4 rect2_trans = glm::mat4(1.0);
-    rect2_trans = glm::scale(rect2_trans, glm::vec3(.25,.25,.25));
-    rect2_trans = glm::rotate(rect2_trans, glm::radians(45.0f), glm::vec3(0,0,1));
+    //Matrix that represents the position of the cube
+    glm::mat4 cube_model = glm::mat4(1);
+    //cube_model = glm::rotate(cube_model, glm::radians(45.0f), glm::vec3(0,0,1));
+    cube_model = glm::scale(cube_model, glm::vec3(.25,.25,.25));
 
+    cout<<glm::to_string(cube_model);
+    //Matrix that represents the position of the camera
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    //Matrix that represents the camera's field of view
+    //Creates a frustrum that defines the visual space
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, .1f, 100.0f);
+
+    glEnable(GL_DEPTH_TEST);
     //Main loop
     while(!glfwWindowShouldClose(window))
     {
         processInput(window);
+        cube_model = glm::rotate(cube_model,glm::radians(2.0f),glm::vec3(0,1,0));
 
         //Clear the screen
         glClearColor(1.0,1.0,0,1);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        //Draw the triangle
-        Shader::BasicColorVertexShader->enable();
-        rect1.bindVertexArray();
-        glDrawElements(GL_TRIANGLES, rect1.getTriangleDataLen(), GL_UNSIGNED_INT, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Shader::BasicTextureShader->enable();
+        Shader::BasicTextureShader->setUniform("view", view);
+        Shader::BasicTextureShader->setUniform("projection", projection);
+
         containerTexture.bind();
-        rect2.bindVertexArray();
-        Shader::BasicTextureShader->setUniform("transform", rect2_trans);
-        glDrawElements(GL_TRIANGLES, rect2.getTriangleDataLen(), GL_UNSIGNED_INT, 0);
+        cube.bindVertexArray();
+        Shader::BasicTextureShader->setUniform("model", cube_model);
+        glDrawElements(GL_TRIANGLES, cube.getTriangleDataLen(), GL_UNSIGNED_INT, 0);
 
-
-        glfwPollEvents();
         glfwSwapBuffers(window);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000/60));
+        glfwPollEvents();
     }
     glfwTerminate();
     return 0;
