@@ -3,6 +3,7 @@
 //
 
 #include "Shader.h"
+#include <exception>
 
 unsigned int Shader::compileShader(unsigned short shaderType, const char* source){
     unsigned int shader = glCreateShader(shaderType);
@@ -39,25 +40,49 @@ unsigned int Shader::makeShaderProgram(const unsigned int shaders[], int n){
     return shaderProgram;
 }
 
-Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath){
+Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) noexcept{
     //Read source code into strings
     std::string vertexShaderSource;
     std::string fragmentShaderSource;
     std::ifstream vertexShaderFile(vertexPath);
+    if(!vertexShaderFile){
+        std::cout<<"Shader source file not found: "<<vertexPath<<std::endl;
+        exit(1);
+    }
     std::ifstream fragmentShaderFile(fragmentPath);
-    getline(vertexShaderFile, vertexShaderSource, '\0');
-    getline(fragmentShaderFile, fragmentShaderSource, '\0');
+    if(!fragmentShaderFile){
+        std::cout<<"Shader source file not found "<<fragmentPath<<std::endl;
+        exit(1);
+    }
+    try {
+        getline(vertexShaderFile, vertexShaderSource, '\0');
+        getline(fragmentShaderFile, fragmentShaderSource, '\0');
+    }catch(std::exception e){
+        std::cout<<e.what()<<std::endl;
+    }
+
 
     unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource.c_str());
+    std::cout<<"Foo!";
     unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource.c_str());
     unsigned int shaders[] = {vertexShader, fragmentShader};
+
+
     shaderProgram = makeShaderProgram(shaders,2);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
 
-void Shader::enable(){
+
+void Shader::enable() const{
     glUseProgram(shaderProgram);
 }
+
+std::optional<Shader> Shader::BasicColorVertexShader;
+
+void Shader::initShaders(){
+    Shader::BasicColorVertexShader = Shader("../BasicColorVertexVertexShader.shader","../BasicColorVertexFragShader.shader");
+}
+
 
 
