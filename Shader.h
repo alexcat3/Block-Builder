@@ -22,8 +22,10 @@ public:
 
     static Shader *currentShader;
 
+    //Make it so draw commands use this shader
     void enable();
 
+    //Set a variable that is used by the shader
     void setUniform(std::string uniformName, glm::mat4 matrix) const;
 
     //Standard shaders that can be used

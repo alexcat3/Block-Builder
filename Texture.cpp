@@ -9,7 +9,7 @@
 Texture::Texture(std::string filename, struct TextureOptions options) {
     //Load the image into *data. Get its width and height
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 3);
     //Create a new empty texture and bind it to GL_TEXTURE_2D
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);

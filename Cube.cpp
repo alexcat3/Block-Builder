@@ -8,42 +8,42 @@
 std::vector<float> cube_vertices{
         //x,y,z,tx,ty
         //front face
-        -1,-1, 1,0,0,
-        -1, 1, 1,0,1,
-        1, 1, 1,1,1,
-        1,-1, 1,1,0,
+        -.5,-.5, .5,0,0,
+        -.5, .5, .5,0,1,
+        .5, .5, .5,1,1,
+        .5,-.5, .5,1,0,
 
         //back face
-        -1,-1, -1,0,0,
-        -1, 1, -1,0,1,
-        1, 1, -1,1,1,
-        1,-1, -1,1,0,
+        -.5,-.5, -.5,0,0,
+        -.5, .5, -.5,0,1,
+        .5,  .5, -.5,1,1,
+        .5,-.5, -.5,1,0,
 
         //top face
-        -1, 1, 1,0,0,
-        -1, 1,-1,0,1,
-        1, 1,-1,1,1,
-        1, 1, 1,1,0,
+        -.5, .5, .5,0,0,
+        -.5, .5,-.5,0,1,
+        .5, .5,-.5,1,1,
+        .5, .5, .5,1,0,
 
         //bottom face
-        -1,-1, 1,0,0,
-        -1,-1,-1,0,1,
-        1,-1,-1,1,1,
-        1,-1, 1,1,0,
+        -.5,-.5, .5,0,0,
+        -.5,-.5,-.5,0,1,
+        .5,-.5,-.5,1,1,
+        .5,-.5, .5,1,0,
 
         //left face
-        -1,-1,-1,0,0,
-        -1, 1,-1,0,1,
-        -1, 1, 1,1,1,
-        -1,-1, 1,1,0,
+        -.5,-.5,-.5,0,0,
+        -.5, .5,-.5,0,1,
+        -.5, .5, .5,1,1,
+        -.5,-.5, .5,1,0,
 
 
 
         //right face
-        1,-1,-1,0,0,
-        1, 1,-1,0,1,
-        1, 1, 1,1,1,
-        1,-1, 1,1,0
+        .5,-.5,-.5,0,0,
+        .5, .5,-.5,0,1,
+        .5, .5, .5,1,1,
+        .5,-.5, .5,1,0
 };
 
 std::vector<unsigned int> cube_triangles{
@@ -67,20 +67,20 @@ std::vector<unsigned int> cube_triangles{
         22,23,20
 };
 
-std::optional<ElementBufferObject> Cube::cubeEBO;
+std::optional<VertexArray> Cube::vertexArr;
 
-//If cubeEBO has not been initialized, intialize it
-//Then returns the value of cubeEBO
-ElementBufferObject Cube::getCubeEBO(){
-    if(cubeEBO == std::nullopt){
-        cubeEBO = ElementBufferObject(cube_vertices, 5, cube_triangles);
+//If vertexArray has not been initialized, intialize it
+//Then returns the value of vertexArray
+VertexArray Cube::getCubeVertexArr(){
+    if(vertexArr == std::nullopt){
+        vertexArr = VertexArray(cube_vertices, 5, cube_triangles);
         //Vertex attributes: 3 floats for rgb color, 2 floats for texture pos
-        cubeEBO->vertexAttrib(0,3)->vertexAttrib(1,2);
+        vertexArr->vertexAttrib(0,3)->vertexAttrib(1,2);
     }
-    return *cubeEBO;
+    return *vertexArr;
 }
 
 
 //Creates a new cube object
 //Initializes cubeEBO if it has not been initialized.
-Cube::Cube(Texture texture, float scale, glm::vec3 position) : ScreenObject(getCubeEBO(), texture, scale, position){};
+Cube::Cube(Texture texture, float scale, glm::vec3 position) : ScreenObject(getCubeVertexArr(), texture, scale, position){};

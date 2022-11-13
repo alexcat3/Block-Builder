@@ -6,19 +6,19 @@
 #define GLFW_TEST_SCREENOBJECT_H
 #include "Shader.h"
 #include "Texture.h"
-#include "ElementBufferObject.h"
+#include "VertexArray.h"
 #include "glm/glm.hpp"
 
 
 class ScreenObject{
-    ElementBufferObject EBO;
+    VertexArray vertexArr;
     Texture texture;
     glm::mat4 model;
 
 
 public:
-    ScreenObject(ElementBufferObject EBO, Texture texture, glm::mat4 model);
-    ScreenObject(ElementBufferObject EBO, Texture texture, float scale, glm::vec3 position);
+    ScreenObject(VertexArray vertexArr, Texture texture, glm::mat4 model);
+    ScreenObject(VertexArray vertexArr, Texture texture, float scale, glm::vec3 position);
 
     void rotateDeg(float deg, glm::vec3 axis);
     void rotateRad(float rad, glm::vec3 axis);
@@ -27,6 +27,7 @@ public:
     void scale(float factor);
     void scale(glm::vec3 factor);
 
+    float getScale();
     void draw();
     glm::vec3 getPos();
 

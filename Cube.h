@@ -8,10 +8,10 @@
 #include <optional>
 
 class Cube : public ScreenObject{
-    static std::optional<ElementBufferObject> cubeEBO;
+    static std::optional<VertexArray> vertexArr;
     //Initializes cubeEBO if it has not been initialized
     //Then returns cubeEBO
-    static ElementBufferObject getCubeEBO();
+    static VertexArray getCubeVertexArr();
 
 public:
     Cube(Texture texture, float scale, glm::vec3 position);

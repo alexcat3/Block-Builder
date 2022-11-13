@@ -2,11 +2,11 @@
 // Created by alexc on 11/9/2022.
 //
 
-#include "ElementBufferObject.h"
+#include "VertexArray.h"
 #include <glad/glad.h>
 #include <glfw3.h>
 
-ElementBufferObject::ElementBufferObject(const std::vector<float> &vertices, int vertexLen, const std::vector<unsigned int> &triangleData) {
+VertexArray::VertexArray(const std::vector<float> &vertices, int vertexLen, const std::vector<unsigned int> &triangleData) {
     numVertices = vertices.size();
     triangleDataLen = triangleData.size();
     this->vertexLen = vertexLen;
@@ -31,19 +31,19 @@ ElementBufferObject::ElementBufferObject(const std::vector<float> &vertices, int
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangleDataLen*sizeof(float), &triangleData[0], GL_STATIC_DRAW);
 }
 
-void ElementBufferObject::bindVertexArray() const{
+void VertexArray::bind() const{
     glBindVertexArray(VAO);
 }
 
-int ElementBufferObject::getNumVertices() const{
+int VertexArray::getNumVertices() const{
     return numVertices;
 }
 
-int ElementBufferObject::getTriangleDataLen() const{
+int VertexArray::getTriangleDataLen() const{
     return triangleDataLen;
 }
 
-ElementBufferObject* ElementBufferObject::vertexAttrib(int n, int length) {
+VertexArray* VertexArray::vertexAttrib(int n, int length) {
     glBindVertexArray(VAO);
     glVertexAttribPointer(n, length, GL_FLOAT, GL_FALSE, vertexLen*sizeof(float), (void*)currentVarOffset);
     glEnableVertexAttribArray(n);
