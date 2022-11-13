@@ -20,7 +20,7 @@ public:
     void bindVertexArray() const;
     int getNumVertices() const;
     int getTriangleDataLen() const;
-    void vertexAttrib(int n, int size);
+    ElementBufferObject* vertexAttrib(int n, int size);
 };
 
 

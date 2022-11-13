@@ -74,7 +74,8 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath) n
 }
 
 
-void Shader::enable() const{
+void Shader::enable(){
+    currentShader = this;
     glUseProgram(shaderProgram);
 }
 
@@ -89,8 +90,10 @@ std::optional<Shader> Shader::BasicTextureShader;
 
 void Shader::initShaders(){
     Shader::BasicColorVertexShader = Shader("../shaders/BasicColorVertexVertexShader.shader","../shaders/BasicColorVertexFragShader.shader");
+
     Shader::BasicTextureShader = Shader("../shaders/BasicTextureVShader.glsl", "../shaders/BasicTextureFShader.glsl");
 }
 
+Shader* Shader::currentShader;
 
 

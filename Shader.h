@@ -14,11 +14,15 @@
 class Shader {
     unsigned int shaderProgram;
 
+
     unsigned static int compileShader(unsigned short shaderType, const char* source);
     unsigned static int makeShaderProgram(const unsigned int shaders[], int n);
 public:
     Shader(const std::string &vertexPath, const std::string &fragmentPath) noexcept;
-    void enable() const;
+
+    static Shader *currentShader;
+
+    void enable();
 
     void setUniform(std::string uniformName, glm::mat4 matrix) const;
 
