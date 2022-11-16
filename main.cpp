@@ -33,16 +33,20 @@ int main() {
     ThreeDVec<optional<Cube>> world(32,8,32);
 
     Texture stone("../textures/stone.png", {});
+    Texture calcite("../textures/calcite.png", {});
+    Texture sandstone("../textures/sandstone.png", {});
+    Texture granite("../textures/granite.png", {});
 
     //Create a "floor" for the world out of stone
     for(int x=0; x<world.getDimensions().x; x++){
         for(int z=0; z<world.getDimensions().z; z++){
-            world.at(x,0,z) = Cube(stone, cubeScale, glm::vec3(x,0,z));
+            world.at(x,0,z) = Cube(stone, glm::vec3(x,0,z));
         }
     }
 
     Texture cursorTex("../textures/cursor.png",{});
-    Cube cursor(cursorTex, cubeScale, glm::vec3(0,0,0));
+    Cube cursor(cursorTex,  glm::vec3(0,0,0));
+
 
     //Matrix that represents the position of the camera
     glm::mat4 view = glm::mat4(1.0f);
@@ -51,6 +55,9 @@ int main() {
     //Matrix that represents the camera's field of view
     //Creates a frustrum that defines the visual space
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, .1f, 100.0f);
+
+    //Number of frames since cursor was last moved
+    int lastCursorMove = 1000;
 
     glEnable(GL_DEPTH_TEST);
     //Main loop
@@ -62,7 +69,7 @@ int main() {
         if(glfwGetKey(window, GLFW_KEY_SPACE)){
             view = glm::translate(view, glm::vec3(0, -.1,0));
         }
-        if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)){
+        else if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)){
             view = glm::translate(view, glm::vec3(0,.1,0));
         }
 
@@ -70,45 +77,70 @@ int main() {
         if(glfwGetKey(window, GLFW_KEY_W)){
             view = glm::translate(view, glm::vec3(0,0,.1));
         }
-        if(glfwGetKey(window, GLFW_KEY_S) ) {
+        else if(glfwGetKey(window, GLFW_KEY_S) ) {
             view = glm::translate(view, glm::vec3(0,0,-.1));
         }
         if(glfwGetKey(window, GLFW_KEY_A)){
             view = glm::translate(view, glm::vec3(.1,0,0));
         }
-        if(glfwGetKey(window, GLFW_KEY_D)){
+        else if(glfwGetKey(window, GLFW_KEY_D)){
             view = glm::translate(view, glm::vec3(-.1,0,0));
         }
         //QE keys rotate the camera
         if(glfwGetKey(window, GLFW_KEY_Q)){
             projection = glm::rotate(projection, glm::radians(-3.0f),glm::vec3(0,1,0));
         }
-        if(glfwGetKey(window, GLFW_KEY_E)){
+        else if(glfwGetKey(window, GLFW_KEY_E)){
             projection = glm::rotate(projection, glm::radians(3.0f), glm::vec3(0,1,0));
         }
+        //Cursor moving code
+        //Cursor only moves every 4 frames
+        lastCursorMove++;
+        if(lastCursorMove > 4) {
+            //Arrow keys move cursor in x and z directions
+            if (glfwGetKey(window, GLFW_KEY_UP) && cursor.getPos().z > 0) {
+                cursor.move(glm::vec3(0, 0, -1));
+                lastCursorMove = 0;
+            }
+            else if (glfwGetKey(window, GLFW_KEY_DOWN) && cursor.getPos().z < (world.getDimensions().z - 1)) {
+                cursor.move(glm::vec3(0, 0, 1));
+                lastCursorMove = 0;
+            }
+            else if (glfwGetKey(window, GLFW_KEY_LEFT) && cursor.getPos().x > 0) {
+                cursor.move(glm::vec3(-1, 0, 0));
+                lastCursorMove=0;
+            }
+            else if (glfwGetKey(window, GLFW_KEY_RIGHT) && cursor.getPos().x < (world.getDimensions().x - 1)) {
+                cursor.move(glm::vec3(1, 0, 0));
+                lastCursorMove=0;
+            }
+            //Right shift and right control move the cursor up and down
+            if (glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) && cursor.getPos().y > 0) {
+                cursor.move(glm::vec3(0, -1, 0));
+                lastCursorMove = 0;
+            }
+            else if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) && cursor.getPos().y < (world.getDimensions().y - 1)) {
+                cursor.move(glm::vec3(0, 1, 0));
+                lastCursorMove=0;
+            }
+        }
 
-        //Arrow keys move cursor in x and z directions
-        if(glfwGetKey(window, GLFW_KEY_UP) && cursor.getPos().z > 0){
-            cursor.move(glm::vec3(0,0,-cubeScale));
+        //Number keys place blocks at location of cursor
+        if(glfwGetKey(window, GLFW_KEY_1)){
+            world.at(cursor.getPos()) = Cube(stone, cursor.getPos());
+        }else if(glfwGetKey(window, GLFW_KEY_2)){
+            world.at(cursor.getPos()) = Cube(granite, cursor.getPos());
+        }else if(glfwGetKey(window, GLFW_KEY_3)){
+            world.at(cursor.getPos()) = Cube(calcite, cursor.getPos());
+        }else if(glfwGetKey(window, GLFW_KEY_4)){
+            world.at(cursor.getPos()) = Cube(sandstone, cursor.getPos());
         }
-        if(glfwGetKey(window, GLFW_KEY_DOWN) && cursor.getPos().z < (world.getDimensions().z-1)*cubeScale){
-            cursor.move(glm::vec3(0,0,cubeScale));
-        }
-        if(glfwGetKey(window, GLFW_KEY_LEFT) && cursor.getPos().x > 0){
-            cursor.move(glm::vec3(-cubeScale,0,0));
-        }
-        if(glfwGetKey(window, GLFW_KEY_RIGHT) && cursor.getPos().x < (world.getDimensions().x-1) * cubeScale){
-            cursor.move(glm::vec3(cubeScale,0,0));
-        }
-        //Right shift and right control move the cursor up and down
-        if(glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) && cursor.getPos().y > 0){
-            cursor.move(glm::vec3(0,0,-cubeScale));
-        }
-        if(glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) && cursor.getPos().y < (world.getDimensions().x-1) * cubeScale) {
-            cursor.move(glm::vec3(0, 0, cubeScale));
+        //Backspace key removes blocks
+        else if(glfwGetKey(window, GLFW_KEY_BACKSPACE)){
+            world.at(cursor.getPos())=nullopt;
         }
 
-        //Clear the screen with cyanS
+        //Clear the screen with cyan
         glClearColor(0,1,1,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

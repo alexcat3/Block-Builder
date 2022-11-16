@@ -14,7 +14,7 @@ class Cube : public ScreenObject{
     static VertexArray getCubeVertexArr();
 
 public:
-    Cube(Texture texture, float scale, glm::vec3 position);
+    Cube(Texture texture, glm::vec3 position);
 };
 
 

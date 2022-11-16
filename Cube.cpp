@@ -83,4 +83,4 @@ VertexArray Cube::getCubeVertexArr(){
 
 //Creates a new cube object
 //Initializes cubeEBO if it has not been initialized.
-Cube::Cube(Texture texture, float scale, glm::vec3 position) : ScreenObject(getCubeVertexArr(), texture, scale, position){};
+Cube::Cube(Texture texture, glm::vec3 position) : ScreenObject(getCubeVertexArr(), texture, position){};
