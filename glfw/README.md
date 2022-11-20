@@ -43,7 +43,8 @@ at its location.
   I relied heavily on the [Learn OpenGL Tutorial](https://learnopengl.com). Much of the code that directly manipulates graphics
   was copied from this tutorial, however, the class structure and main logic of the program are original. 
   
-The program uses the GLFW graphics library, the GLAD driver library, and the stb_image library.
+The program uses the GLFW graphics library, the GLAD driver library, and the stb_image library. It uses textures from the original
+Minecraft game.
 
 ### Grade
 #### Main Program
