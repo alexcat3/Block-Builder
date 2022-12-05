@@ -92,6 +92,10 @@ void Shader::setUniform(std::string uniformName, glm::mat4 matrix) const {
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Shader::setUniformInt(std::string uniformName, int i) const {
+    glUniform1i(glGetUniformLocation(shaderProgram, uniformName.c_str()), i);
+}
+
 std::optional<Shader> Shader::BasicColorVertexShader;
 std::optional<Shader> Shader::BasicTextureShader;
 

@@ -5,10 +5,8 @@
 #include "ScreenObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-ScreenObject::ScreenObject(VertexArray vertexArr, Texture texture, glm::mat4 model):
-  vertexArr(vertexArr), texture(texture), model(model){};
 ScreenObject::ScreenObject(VertexArray vertexArr, Texture texture,  glm::vec3 position):
-    vertexArr(vertexArr), texture(texture), model(glm::translate(glm::mat4(1), position)){};
+    vertexArr(vertexArr), texture(texture), model(glm::mat4(1)), pos(position), invert(false){};
 
 void ScreenObject::rotateDeg(float deg, glm::vec3 axis) {
     rotateRad(glm::radians(deg),axis);
@@ -18,17 +16,29 @@ void ScreenObject::rotateRad(float rad, glm::vec3 axis) {
 }
 
 void ScreenObject::move(glm::vec3 direction){
-    model = glm::translate(model, direction);
+   pos += direction;
 }
 
 glm::vec3 ScreenObject::getPos(){
-     glm::vec4 posW = model*glm::vec4(0,0,0,1);
-     return glm::vec3(posW.x, posW.y, posW.z);
+     return pos;
+}
+
+void ScreenObject::setPos(glm::vec3 position){
+    pos = position;
 }
 
 void ScreenObject::draw(){
-    Shader::currentShader->setUniform("model", model);
-    texture.bind();
+    Shader::currentShader->setUniform("model", glm::translate(glm::mat4(1),pos)*model);
+    Shader::currentShader->setUniformInt("invert", invert);
     vertexArr.bind();
+    texture.bind();
     glDrawElements(GL_TRIANGLES, vertexArr.getTriangleDataLen(), GL_UNSIGNED_INT, 0);
+}
+
+Texture ScreenObject::getTexture() {
+    return texture;
+}
+
+void ScreenObject::setInvert(bool invert) {
+    this->invert = invert;
 }

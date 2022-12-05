@@ -81,6 +81,24 @@ VertexArray Cube::getCubeVertexArr(){
 }
 
 
+
 //Creates a new cube object
 //Initializes cubeEBO if it has not been initialized.
-Cube::Cube(Texture texture, glm::vec3 position) : ScreenObject(getCubeVertexArr(), texture, position){};
+Cube::Cube( const char* name, int id, Texture texture, glm::vec3 position) : Block(name, id, getCubeVertexArr(), texture, position){};
+
+std::unique_ptr<Block> Cube::clone(glm::vec3 position){
+    return std::make_unique<Cube>(Cube(getName(), getId(), getTexture(), position));
+}
+
+void Cube::initCubes(){
+    blockTypes.push_back(nullptr);
+    Texture stone("../textures/stone.png",{});
+    blockTypes.push_back(std::make_unique<Cube>(Cube("Stone",1,stone,glm::vec3(0,0,0))));
+    Texture sandstone("../textures/sandstone.png", {});
+    blockTypes.push_back(std::make_unique<Cube>(Cube("Sandstone", 2, sandstone, glm::vec3(0,0,0))));
+    Texture granite("../textures/granite.png",{});
+    blockTypes.push_back(std::make_unique<Cube>(Cube("Granite", 3, granite, glm::vec3(0,0,0))));
+    Texture calcite("../textures/calcite.png", {});
+    blockTypes.push_back(std::make_unique<Cube>(Cube("Calcite", 4, calcite, glm::vec3(0,0,0))));
+
+}

@@ -6,7 +6,6 @@
 #define GLFW_TEST_SHADER_H
 #include <iostream>
 #include <glad/glad.h>
-#include <glfw3.h>
 #include "glm/glm.hpp"
 #include <fstream>
 #include <optional>
@@ -27,6 +26,7 @@ public:
 
     //Set a variable that is used by the shader
     void setUniform(std::string uniformName, glm::mat4 matrix) const;
+    void setUniformInt(std::string uniformName, int i) const;
 
     //Standard shaders that can be used
     static std::optional<Shader> BasicColorVertexShader;

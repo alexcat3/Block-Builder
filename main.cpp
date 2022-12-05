@@ -1,144 +1,71 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <glad/glad.h>
-#include <glfw3.h>
-#include <vector>
-#include <map>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
-#include "glm/gtx/string_cast.hpp"
 #include "Shader.h"
-#include "VertexArray.h"
+#include "Camera.h"
 #include "Texture.h"
-#include "ScreenObject.h"
 #include "Cube.h"
-#include "ThreeDVec.h"
-#include "ThreeDVec.cpp"
+#include "World.h"
 
 using namespace std;
 
 //Used tutorial https://learnopengl.com/Getting-started/
+//Textures from https://github.com/Athemis/PixelPerfectionCE/tree/master/assets/minecraft
 
-
+int lastNumberKey = 1;
+bool leftButtonPress;
+bool rightButtonPress;
 GLFWwindow* initWindow(int width, int height);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
 
 int main() {
     //Create new OpenGL window
     GLFWwindow* window = initWindow(800,600);
+
+    glfwSetKeyCallback(window,keyCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
     //Compile the shaders used in the project
     Shader::initShaders();
     float cubeScale = 1;
-    ThreeDVec<optional<Cube>> world(32,8,32);
+    //Load cube textures
+    Cube::initCubes();
 
-    Texture stone("../textures/stone.png", {});
-    Texture calcite("../textures/calcite.png", {});
-    Texture sandstone("../textures/sandstone.png", {});
-    Texture granite("../textures/granite.png", {});
+    World world("../world.wld");
 
-    //Create a "floor" for the world out of stone
-    for(int x=0; x<world.getDimensions().x; x++){
-        for(int z=0; z<world.getDimensions().z; z++){
-            world.at(x,0,z) = Cube(stone, glm::vec3(x,0,z));
-        }
-    }
 
     Texture cursorTex("../textures/cursor.png",{});
-    Cube cursor(cursorTex,  glm::vec3(0,0,0));
+    Cube cursor( "Cursor",-1, cursorTex,  glm::vec3(0,0,0));
 
-
-    //Matrix that represents the position of the camera
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-    //Matrix that represents the camera's field of view
-    //Creates a frustrum that defines the visual space
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, .1f, 100.0f);
-
-    //Number of frames since cursor was last moved
-    int lastCursorMove = 1000;
+    //Create a camera
+    Camera camera(glm::vec3(-2,0,0),45,800.0f/600.0f, 0.1f, 100.0f, window);
 
     glEnable(GL_DEPTH_TEST);
+    bool cursorHidden;
+
     //Main loop
-    while(!glfwWindowShouldClose(window))
+    while(!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE))
     {
         //***Process user input
-
-        //Space moves camera up, left shift moves it down
-        if(glfwGetKey(window, GLFW_KEY_SPACE)){
-            view = glm::translate(view, glm::vec3(0, -.1,0));
-        }
-        else if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)){
-            view = glm::translate(view, glm::vec3(0,.1,0));
-        }
-
-        //WASD keys move the camera in x and z directions
-        if(glfwGetKey(window, GLFW_KEY_W)){
-            view = glm::translate(view, glm::vec3(0,0,.1));
-        }
-        else if(glfwGetKey(window, GLFW_KEY_S) ) {
-            view = glm::translate(view, glm::vec3(0,0,-.1));
-        }
-        if(glfwGetKey(window, GLFW_KEY_A)){
-            view = glm::translate(view, glm::vec3(.1,0,0));
-        }
-        else if(glfwGetKey(window, GLFW_KEY_D)){
-            view = glm::translate(view, glm::vec3(-.1,0,0));
-        }
-        //QE keys rotate the camera
-        if(glfwGetKey(window, GLFW_KEY_Q)){
-            projection = glm::rotate(projection, glm::radians(-3.0f),glm::vec3(0,1,0));
-        }
-        else if(glfwGetKey(window, GLFW_KEY_E)){
-            projection = glm::rotate(projection, glm::radians(3.0f), glm::vec3(0,1,0));
-        }
-        //Cursor moving code
-        //Cursor only moves every 4 frames
-        lastCursorMove++;
-        if(lastCursorMove > 4) {
-            //Arrow keys move cursor in x and z directions
-            if (glfwGetKey(window, GLFW_KEY_UP) && cursor.getPos().z > 0) {
-                cursor.move(glm::vec3(0, 0, -1));
-                lastCursorMove = 0;
-            }
-            else if (glfwGetKey(window, GLFW_KEY_DOWN) && cursor.getPos().z < (world.getDimensions().z - 1)) {
-                cursor.move(glm::vec3(0, 0, 1));
-                lastCursorMove = 0;
-            }
-            else if (glfwGetKey(window, GLFW_KEY_LEFT) && cursor.getPos().x > 0) {
-                cursor.move(glm::vec3(-1, 0, 0));
-                lastCursorMove=0;
-            }
-            else if (glfwGetKey(window, GLFW_KEY_RIGHT) && cursor.getPos().x < (world.getDimensions().x - 1)) {
-                cursor.move(glm::vec3(1, 0, 0));
-                lastCursorMove=0;
-            }
-            //Right shift and right control move the cursor up and down
-            if (glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) && cursor.getPos().y > 0) {
-                cursor.move(glm::vec3(0, -1, 0));
-                lastCursorMove = 0;
-            }
-            else if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) && cursor.getPos().y < (world.getDimensions().y - 1)) {
-                cursor.move(glm::vec3(0, 1, 0));
-                lastCursorMove=0;
+        //rotate/move camera using mouse + keyboard
+        camera.takeUserInput();
+        //Move cursor to the place where the camera is looking
+        cursorHidden = true;
+        std::optional<CameraTarget> target = world.findCameraTarget(camera);
+        if(target){
+            if(leftButtonPress && world.inBounds(target->addPos)){
+                leftButtonPress = false;
+                world.at(target->addPos) = Block::newBlock(lastNumberKey, target->addPos);
+            }else if(rightButtonPress){
+                rightButtonPress = false;
+                world.at(target->deletePos) = nullptr;
+            }else {
+                cursor.setPos(target->addPos);
+                cursorHidden = false;
             }
         }
 
-        //Number keys place blocks at location of cursor
-        if(glfwGetKey(window, GLFW_KEY_1)){
-            world.at(cursor.getPos()) = Cube(stone, cursor.getPos());
-        }else if(glfwGetKey(window, GLFW_KEY_2)){
-            world.at(cursor.getPos()) = Cube(granite, cursor.getPos());
-        }else if(glfwGetKey(window, GLFW_KEY_3)){
-            world.at(cursor.getPos()) = Cube(calcite, cursor.getPos());
-        }else if(glfwGetKey(window, GLFW_KEY_4)){
-            world.at(cursor.getPos()) = Cube(sandstone, cursor.getPos());
-        }
-        //Backspace key removes blocks
-        else if(glfwGetKey(window, GLFW_KEY_BACKSPACE)){
-            world.at(cursor.getPos())=nullopt;
-        }
 
         //Clear the screen with cyan
         glClearColor(0,1,1,1);
@@ -146,27 +73,18 @@ int main() {
 
         //Pass the camera position and perspective to the shader
         Shader::BasicTextureShader->enable();
-        Shader::BasicTextureShader->setUniform("view", view);
-        Shader::BasicTextureShader->setUniform("projection", projection);
-
-        cout<<glm::to_string(cursor.getPos()/cubeScale);
-
-        for(int x=0; x<world.getDimensions().x; x++){
-            for(int y=0; y<world.getDimensions().y; y++){
-                for(int z=0; z<world.getDimensions().z; z++){
-                    if(glm::vec3(x,y,z) == cursor.getPos()/cubeScale){
-                        cursor.draw();
-                    }else if(world.at(x,y,z) != nullopt){
-                        world.at(x,y,z)->draw();
-                    }
-                }
-            }
+        camera.prepareDraw();
+        world.draw();
+        if(!cursorHidden) {
+            cursor.draw();
         }
         //Display drawn objects on screen
         glfwSwapBuffers(window);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/60));
         glfwPollEvents();
+
     }
+    world.saveToFile("../world.wld");
     glfwTerminate();
     return 0;
 }
@@ -202,4 +120,17 @@ GLFWwindow* initWindow(int width, int height){
     glViewport(0, 0, width, height);
 
     return window;
+}
+
+void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods){
+    if(key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+        lastNumberKey = key - GLFW_KEY_0;
+    }
+}
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
+        leftButtonPress = true;
+    }else if(button = GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+        rightButtonPress = true;
+    }
 }

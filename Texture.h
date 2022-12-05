@@ -6,7 +6,7 @@
 #define GLFW_TEST_TEXTURE_H
 #include <iostream>
 #include <glad/glad.h>
-
+#include <glfw3.h>
 struct TextureOptions{
     int WRAP_S = GL_REPEAT;
     int WRAP_T = GL_REPEAT;

@@ -3,7 +3,6 @@
 //
 
 #include "Texture.h"
-#include <glad/glad.h>
 #include <stb_image.h>
 
 Texture::Texture(std::string filename, struct TextureOptions options) {

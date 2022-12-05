@@ -13,21 +13,25 @@
 class ScreenObject{
     VertexArray vertexArr;
     Texture texture;
+    glm::vec3 pos;
     glm::mat4 model;
-
+    bool invert;
 
 public:
-    ScreenObject(VertexArray vertexArr, Texture texture, glm::mat4 model);
     ScreenObject(VertexArray vertexArr, Texture texture, glm::vec3 position);
 
     void rotateDeg(float deg, glm::vec3 axis);
     void rotateRad(float rad, glm::vec3 axis);
 
     void move(glm::vec3 direction);
+    void setPos(glm::vec3 pos);
 
     void draw();
     glm::vec3 getPos();
 
+    void setInvert(bool invert);
+
+    Texture getTexture();
 };
 
 

@@ -14,10 +14,12 @@ public:
     explicit ThreeDVec(glm::vec3 dimensions);
     ThreeDVec(int x, int y, int z);
 
-    glm::vec3 &getDimensions();
+    glm::vec3 getDimensions();
 
     T &at(glm::vec3 pos);
     T &at(int x, int y, int z);
+
+    bool inBounds(glm::vec3 pos);
 };
 
 
