@@ -15,8 +15,10 @@ struct TextureOptions{
 };
 class Texture {
     unsigned int textureId;
+    void setTexture(unsigned char* data, int width, int height, TextureOptions options);
 public:
     Texture(std::string filename, struct TextureOptions options);
+    Texture(std::string top, std::string middle, std::string bottom, struct TextureOptions options);
     void bind();
 };
 

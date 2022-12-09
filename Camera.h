@@ -19,7 +19,9 @@ public:
 
     glm::vec3 getDirection();
     glm::vec3 getPos();
-    void prepareDraw();
+    glm::mat4 getViewMatrix();
+    void prepareDraw3D();
+    void prepareDrawOverlay();
     void rotateRad(float rad);
     void rotateDeg(float deg);
     void tiltRad(float rad);

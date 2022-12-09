@@ -25,13 +25,13 @@ public:
     void enable();
 
     //Set a variable that is used by the shader
-    void setUniform(std::string uniformName, glm::mat4 matrix) const;
-    void setUniformInt(std::string uniformName, int i) const;
+    void setUniform(const std::string &uniformName, glm::mat4 matrix) const;
+    void setUniformInt(const std::string &uniformName, int i) const;
+    void setUniformVec3(const std::string &uniformName, glm::vec3 uniform);
 
     //Standard shaders that can be used
     static std::optional<Shader> BasicColorVertexShader;
     static std::optional<Shader> BasicTextureShader;
-
     //Compiles the standard shaders
     static void initShaders();
 };

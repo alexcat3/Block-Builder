@@ -9,12 +9,20 @@ Camera::Camera(glm::vec3 pos, float fov, float aspect, float zNear, float zFar, 
     glfwSetInputMode(window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-void Camera::prepareDraw(){
-    glm::vec3 yAxis = glm::vec3(0,1,0);
-    glm::mat4 view = glm::lookAt(pos, pos+getDirection(), yAxis);
+void Camera::prepareDraw3D(){
 
-    Shader::currentShader->setUniform("view",view);
+    Shader::currentShader->setUniform("view",getViewMatrix());
     Shader::currentShader->setUniform("projection",projection);
+}
+
+glm::mat4 Camera::getViewMatrix(){
+    glm::vec3 yAxis = glm::vec3(0,1,0);
+    return glm::lookAt(pos, pos+getDirection(), yAxis);
+}
+
+void Camera::prepareDrawOverlay(){
+    Shader::currentShader->setUniform("view", glm::mat4(1));
+    Shader::currentShader->setUniform("projection", glm::mat4(1));
 }
 
 glm::vec3 Camera::getDirection(){

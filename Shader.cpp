@@ -88,12 +88,15 @@ void Shader::enable(){
 
 
 
-void Shader::setUniform(std::string uniformName, glm::mat4 matrix) const {
+void Shader::setUniform(const std::string &uniformName, glm::mat4 matrix) const {
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Shader::setUniformInt(std::string uniformName, int i) const {
+void Shader::setUniformInt(const std::string &uniformName, int i) const {
     glUniform1i(glGetUniformLocation(shaderProgram, uniformName.c_str()), i);
+}
+void Shader::setUniformVec3(const std::string &uniformName, glm::vec3 uniform) {
+    glUniform3fv(glGetUniformLocation(shaderProgram, uniformName.c_str()),1, glm::value_ptr(uniform));
 }
 
 std::optional<Shader> Shader::BasicColorVertexShader;
@@ -101,7 +104,6 @@ std::optional<Shader> Shader::BasicTextureShader;
 
 void Shader::initShaders(){
     Shader::BasicColorVertexShader = Shader("../shaders/BasicColorVertexVertexShader.shader","../shaders/BasicColorVertexFragShader.shader");
-
     Shader::BasicTextureShader = Shader("../shaders/BasicTextureVShader.glsl", "../shaders/BasicTextureFShader.glsl");
 }
 

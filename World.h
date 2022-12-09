@@ -23,7 +23,7 @@ public:
     explicit World(short width, short height, short length);
     explicit World(std::string filename);
 
-    void draw();
+    void draw(glm::vec3 cameraPos);
     void saveToFile(std::string filename);
     std::optional<CameraTarget> findCameraTarget(Camera &camera);
     std::unique_ptr<Block> &at(short x, short y, short z);

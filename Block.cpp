@@ -4,8 +4,8 @@
 
 #include "Block.h"
 
-Block::Block(const char *name, short id, VertexArray vertexArray, Texture texture, glm::vec3 position) :
-    ScreenObject(vertexArray, texture, position), blockName(name), blockId(id) {};
+Block::Block(const char *name, short id, VertexArray vertexArray, Texture texture, Texture flatTexture, glm::vec3 position) :
+    ScreenObject(vertexArray, texture, position), blockName(name), flatTexture(flatTexture), blockId(id) {};
 
 const char *Block::getName() {
     return blockName;
@@ -15,6 +15,9 @@ short Block::getId() {
     return blockId;
 }
 
+Texture Block::getFlatTexture(){
+    return flatTexture;
+}
 
 std::vector<std::unique_ptr<Block>> Block::blockTypes;
 

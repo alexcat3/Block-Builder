@@ -4,22 +4,23 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Cube.h"
+#include "CubeIdenticalFace.h"
+#include "Cube3Face.h"
 #include "World.h"
+#include "BlockSelector.h"
 
 using namespace std;
 
 //Used tutorial https://learnopengl.com/Getting-started/
 //Textures from https://github.com/Athemis/PixelPerfectionCE/tree/master/assets/minecraft
 
-int lastNumberKey = 1;
-bool leftButtonPress;
-bool rightButtonPress;
 GLFWwindow* initWindow(int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+bool leftButtonPress = false;
+bool rightButtonPress = false;
 
-
+BlockSelector* selectorPtr;
 int main() {
     //Create new OpenGL window
     GLFWwindow* window = initWindow(800,600);
@@ -30,19 +31,26 @@ int main() {
     Shader::initShaders();
     float cubeScale = 1;
     //Load cube textures
-    Cube::initCubes();
+    CubeIdenticalFace::initCubes();
+    Cube3Face::initCubes();
 
     World world("../world.wld");
 
+    BlockSelector selector;
+    selectorPtr = &selector;
 
     Texture cursorTex("../textures/cursor.png",{});
-    Cube cursor( "Cursor",-1, cursorTex,  glm::vec3(0,0,0));
+    CubeIdenticalFace cursor("Cursor", -1, cursorTex, glm::vec3(0, 0, 0));
 
     //Create a camera
     Camera camera(glm::vec3(-2,0,0),45,800.0f/600.0f, 0.1f, 100.0f, window);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
     bool cursorHidden;
+
+    bool menuEnabled = false;
 
     //Main loop
     while(!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE))
@@ -56,7 +64,7 @@ int main() {
         if(target){
             if(leftButtonPress && world.inBounds(target->addPos)){
                 leftButtonPress = false;
-                world.at(target->addPos) = Block::newBlock(lastNumberKey, target->addPos);
+                world.at(target->addPos) = selector.getSelectedBlock(glm::vec3(target->addPos));
             }else if(rightButtonPress){
                 rightButtonPress = false;
                 world.at(target->deletePos) = nullptr;
@@ -67,17 +75,24 @@ int main() {
         }
 
 
+
         //Clear the screen with cyan
         glClearColor(0,1,1,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Pass the camera position and perspective to the shader
         Shader::BasicTextureShader->enable();
-        camera.prepareDraw();
-        world.draw();
+        camera.prepareDraw3D();
+        //Draw world and cursor
+        world.draw(camera.getPos());
         if(!cursorHidden) {
             cursor.draw();
         }
+
+        //Prepare to draw 2D objects by taking away perspective informaiton
+        camera.prepareDrawOverlay();
+        //Draw menu if enabled
+        selector.draw();
         //Display drawn objects on screen
         glfwSwapBuffers(window);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/60));
@@ -123,14 +138,12 @@ GLFWwindow* initWindow(int width, int height){
 }
 
 void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods){
-    if(key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
-        lastNumberKey = key - GLFW_KEY_0;
-    }
+   selectorPtr->processKbdInput(key, action);
 }
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
     if(button == GLFW_MOUSE_BUTTON_LEFT && action==GLFW_PRESS){
         leftButtonPress = true;
-    }else if(button = GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+    }else if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
         rightButtonPress = true;
     }
 }

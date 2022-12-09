@@ -2,10 +2,10 @@
 // Created by alexc on 11/13/2022.
 //
 
-#include "Cube.h"
+#include "CubeIdenticalFace.h"
 #include <vector>
 
-std::vector<float> cube_vertices{
+std::vector<float> cube_ident_face_vertices{
         //x,y,z,tx,ty
         //front face
         -.5,-.5, .5,0,0,
@@ -46,7 +46,7 @@ std::vector<float> cube_vertices{
         .5,-.5, .5,1,0
 };
 
-std::vector<unsigned int> cube_triangles{
+std::vector<unsigned int> cube_ident_face_triangles{
         //Front face
         0,1,2,
         2,3,0,
@@ -67,13 +67,13 @@ std::vector<unsigned int> cube_triangles{
         22,23,20
 };
 
-std::optional<VertexArray> Cube::vertexArr;
+std::optional<VertexArray> CubeIdenticalFace::vertexArr;
 
 //If vertexArray has not been initialized, intialize it
 //Then returns the value of vertexArray
-VertexArray Cube::getCubeVertexArr(){
+VertexArray CubeIdenticalFace::getCubeVertexArr(){
     if(vertexArr == std::nullopt){
-        vertexArr = VertexArray(cube_vertices, 5, cube_triangles);
+        vertexArr = VertexArray(cube_ident_face_vertices, 5, cube_ident_face_triangles);
         //Vertex attributes: 3 floats for rgb color, 2 floats for texture pos
         vertexArr->vertexAttrib(0,3)->vertexAttrib(1,2);
     }
@@ -84,21 +84,21 @@ VertexArray Cube::getCubeVertexArr(){
 
 //Creates a new cube object
 //Initializes cubeEBO if it has not been initialized.
-Cube::Cube( const char* name, int id, Texture texture, glm::vec3 position) : Block(name, id, getCubeVertexArr(), texture, position){};
+CubeIdenticalFace::CubeIdenticalFace(const char* name, int id, Texture texture, glm::vec3 position) : Block(name, id, getCubeVertexArr(), texture, texture, position){};
 
-std::unique_ptr<Block> Cube::clone(glm::vec3 position){
-    return std::make_unique<Cube>(Cube(getName(), getId(), getTexture(), position));
+std::unique_ptr<Block> CubeIdenticalFace::clone(glm::vec3 position){
+    return std::make_unique<CubeIdenticalFace>(CubeIdenticalFace(getName(), getId(), getTexture(), position));
 }
 
-void Cube::initCubes(){
+void CubeIdenticalFace::initCubes(){
     blockTypes.push_back(nullptr);
     Texture stone("../textures/stone.png",{});
-    blockTypes.push_back(std::make_unique<Cube>(Cube("Stone",1,stone,glm::vec3(0,0,0))));
-    Texture sandstone("../textures/sandstone.png", {});
-    blockTypes.push_back(std::make_unique<Cube>(Cube("Sandstone", 2, sandstone, glm::vec3(0,0,0))));
+    blockTypes.push_back(std::make_unique<CubeIdenticalFace>(CubeIdenticalFace("Stone", 1, stone, glm::vec3(0, 0, 0))));
     Texture granite("../textures/granite.png",{});
-    blockTypes.push_back(std::make_unique<Cube>(Cube("Granite", 3, granite, glm::vec3(0,0,0))));
-    Texture calcite("../textures/calcite.png", {});
-    blockTypes.push_back(std::make_unique<Cube>(Cube("Calcite", 4, calcite, glm::vec3(0,0,0))));
+    blockTypes.push_back(std::make_unique<CubeIdenticalFace>(CubeIdenticalFace("Granite", 2, granite, glm::vec3(0, 0, 0))));
+    Texture calcite("../textures/diorite.png", {});
+    blockTypes.push_back(std::make_unique<CubeIdenticalFace>(CubeIdenticalFace("Diorite", 3, calcite, glm::vec3(0, 0, 0))));
+    Texture glass("../textures/glass.png",{});
+    blockTypes.push_back(std::make_unique<CubeIdenticalFace>(CubeIdenticalFace("Glass", 4, glass,glm::vec3(0,0,0))));
 
 }

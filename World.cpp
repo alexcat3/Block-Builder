@@ -79,12 +79,18 @@ void World::saveToFile(std::string filename) {
      return world.at(pos);
  }
 
- void World::draw() {
-    for(int x=0; x<world.getDimensions().x; x++){
-        for(int y=0; y<world.getDimensions().y; y++){
-            for(int z=0; z<world.getDimensions().z; z++){
-                if(world.at(x,y,z) != nullptr) {
-                    world.at(x, y, z)->draw();
+ void World::draw(glm::vec3 cameraPos) {
+    for(int taxiCabDist = world.getDimensions().x+world.getDimensions().y + world.getDimensions().z; taxiCabDist >0; taxiCabDist--){
+        for(int dx = floor(-cameraPos.x); floor(dx + cameraPos.x) < world.getDimensions().x; dx++){
+            for(int dy=floor(-cameraPos.y); floor(dy + cameraPos.y) < world.getDimensions().y; dy++){
+                int dz = taxiCabDist - abs(dx) - abs(dy);
+                glm::vec3 drawPos1 = glm::vec3(dx+cameraPos.x, dy+cameraPos.y, dz+cameraPos.z);
+                glm::vec3 drawPos2 = glm::vec3(dx+cameraPos.x, dy+cameraPos.y, -dz+cameraPos.z);
+                if(world.inBounds(drawPos1) && world.at(drawPos1) != nullptr){
+                    world.at(drawPos1)->draw();
+                }
+                if(world.inBounds(drawPos2) && world.at(drawPos2) != nullptr){
+                    world.at(drawPos2)->draw();
                 }
             }
         }
