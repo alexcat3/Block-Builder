@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "CubeIdenticalFace.h"
-#include "Cube3Face.h"
+#include "Cube4Face.h"
 #include "World.h"
 #include "BlockSelector.h"
 
@@ -32,7 +32,7 @@ int main() {
     float cubeScale = 1;
     //Load cube textures
     CubeIdenticalFace::initCubes();
-    Cube3Face::initCubes();
+    Cube4Face::initCubes();
 
     World world("../world.wld");
 

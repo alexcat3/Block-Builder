@@ -11,7 +11,6 @@
 }
 
  World::World(std::string filename) : world(1,1,1){
-
     std::ifstream saveFile(filename, std::ios::binary);
     //If the save file exists load the world data from it
     if(saveFile) {

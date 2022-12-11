@@ -14,27 +14,31 @@ Texture::Texture(std::string filename, struct TextureOptions options) {
 }
 
 
-Texture::Texture(std::string top, std::string middle, std::string bottom, struct TextureOptions options){
+Texture::Texture(std::string top, std::string front, std::string side, std::string bottom, struct TextureOptions options){
     int width1, height1, nrChannels1;
     int width2, height2, nrChannels2;
     int width3, height3, nrChannels3;
+    int width4, height4, nrChannels4;
     unsigned char *data1 = stbi_load(top.c_str(), &width1, &height1, &nrChannels1, 4);
-    unsigned char *data2 = stbi_load(middle.c_str(), &width2, &height2, &nrChannels2,4);
-    unsigned char *data3 = stbi_load(bottom.c_str(), &width3, &height3, &nrChannels3, 4);
+    unsigned char *data2 = stbi_load(front.c_str(), &width2, &height2, &nrChannels2,4);
+    unsigned char *data3 = stbi_load(side.c_str(),&width3, &height3, &nrChannels3, 4);
+    unsigned char *data4 = stbi_load(bottom.c_str(), &width4, &height4, &nrChannels3, 4);
     if(width1 != width2 || width2 != width3){
         throw std::invalid_argument("Texture widths must be equal");
     }
 
 
-    unsigned char* data = (unsigned char*)malloc(width1*(height1+height2+height3)*4);
+    unsigned char* data = (unsigned char*)malloc(width1*(height1+height2+height3+height4)*4);
 
     memcpy(data, data1, width1*height1*4);
     memcpy(data+width1*height1*4, data2, width1*height2*4);
     memcpy(data+width1*(height1+height2)*4, data3, width1*height3*4);
+    memcpy(data+width1*(height1+height2+height3)*4, data4, width1*height4*4);
     stbi_image_free(data1);
     stbi_image_free(data2);
     stbi_image_free(data3);
-    setTexture(data, width1, height1+height2+height3, options);
+    stbi_image_free(data4);
+    setTexture(data, width1, height1+height2+height3+height4, options);
 
     free(data);
 }

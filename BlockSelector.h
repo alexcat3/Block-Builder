@@ -18,6 +18,8 @@ class BlockSelector {
     Rect2D menuBackgroundRect;
     int menuCursorCol, menuCursorRow;
     std::vector<Rect2D> blockChoiceRects;
+    Texture menuCursorTexture;
+
 
     const int hotbarNumElements = menuNumCols;
     const float hotbarElementWidth = menuColWidth;
@@ -26,12 +28,13 @@ class BlockSelector {
     int hotbarSelectionCol=0;
     std::vector<std::unique_ptr<Block>> hotbarBlocks;
     std::vector<Rect2D> hotbarBlockRects;
+    Texture hotbarCursorTexture;
 
 public:
     BlockSelector();
     void draw();
     void processKbdInput(int key, int action);
-    void getSelectedBlock(glm::vec3 coords);
+    std::unique_ptr<Block> getSelectedBlock(glm::vec3 coords);
 };
 
 
