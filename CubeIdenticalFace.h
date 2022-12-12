@@ -6,7 +6,7 @@
 #define GLFW_TEST_CUBEIDENTICALFACE_H
 #include "Block.h"
 #include <optional>
-
+//Represents a cube where all faces are identical
 class CubeIdenticalFace : public Block{
     static std::optional<VertexArray> vertexArr;
     //Initializes cubeEBO if it has not been initialized

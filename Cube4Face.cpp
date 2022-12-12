@@ -8,8 +8,8 @@
 //
 
 #include <vector>
-
-std::vector<float> cube3face_vertices{
+//Vertex data for 4 face cube
+std::vector<float> cube4face_vertices{
         //x,y,z,tx,ty
         //front face
         -.5,-.5, .5,0,.25,
@@ -50,7 +50,7 @@ std::vector<float> cube3face_vertices{
         .5,-.5, .5, 1,.5
 };
 
-std::vector<unsigned int> cube3face_triangles{
+std::vector<unsigned int> cube4face_triangles{
         //Front face
         0,1,2,
         2,3,0,
@@ -77,7 +77,7 @@ std::optional<VertexArray> Cube4Face::vertexArr;
 //Then returns the value of vertexArray
 VertexArray Cube4Face::getCubeVertexArr(){
     if(vertexArr == std::nullopt){
-        vertexArr = VertexArray(cube3face_vertices, 5, cube3face_triangles);
+        vertexArr = VertexArray(cube4face_vertices, 5, cube4face_triangles);
         //Vertex attributes: 3 floats for rgb color, 2 floats for texture pos
         vertexArr->vertexAttrib(0,3)->vertexAttrib(1,2);
     }
@@ -94,6 +94,7 @@ std::unique_ptr<Block> Cube4Face::clone(glm::vec3 position){
     return std::make_unique<Cube4Face>(Cube4Face(getName(), getId(), getTexture(), getFlatTexture(), position));
 }
 
+//Initialize all 4 face cube block types and add them to the blockTypes array
 void Cube4Face::initCubes(){
     Texture sandstone("../textures/sandstone_top.png","../textures/sandstone_side.png","../textures/sandstone_side.png","../textures/sandstone_bottom.png", {});
     Texture sandstoneFlat("../textures/sandstone_side.png", {});

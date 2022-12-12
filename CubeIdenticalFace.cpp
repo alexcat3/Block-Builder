@@ -4,7 +4,7 @@
 
 #include "CubeIdenticalFace.h"
 #include <vector>
-
+//Vertex data used for all CubeIdenticalFace instances
 std::vector<float> cube_ident_face_vertices{
         //x,y,z,tx,ty
         //front face
@@ -45,7 +45,7 @@ std::vector<float> cube_ident_face_vertices{
         .5, .5, .5,1,1,
         .5,-.5, .5,1,0
 };
-
+//Triangle data used for all CubeIdenticalFace instances
 std::vector<unsigned int> cube_ident_face_triangles{
         //Front face
         0,1,2,
@@ -66,7 +66,7 @@ std::vector<unsigned int> cube_ident_face_triangles{
         20,21,22,
         22,23,20
 };
-
+//Vertex array used for all CubeIdenticalFace instances
 std::optional<VertexArray> CubeIdenticalFace::vertexArr;
 
 //If vertexArray has not been initialized, intialize it
@@ -83,13 +83,15 @@ VertexArray CubeIdenticalFace::getCubeVertexArr(){
 
 
 //Creates a new cube object
-//Initializes cubeEBO if it has not been initialized.
+//Initializes cube vertex array if it has not been initialized.
 CubeIdenticalFace::CubeIdenticalFace(const char* name, int id, Texture texture, glm::vec3 position) : Block(name, id, getCubeVertexArr(), texture, texture, position){};
 
+//Creates a copy of the object with a different position
 std::unique_ptr<Block> CubeIdenticalFace::clone(glm::vec3 position){
     return std::make_unique<CubeIdenticalFace>(CubeIdenticalFace(getName(), getId(), getTexture(), position));
 }
 
+//Adds all types of CubeIdenticalFace to the blockTypes vector
 void CubeIdenticalFace::initCubes(){
     Texture stone("../textures/stone.png",{});
     blockTypes.push_back(std::make_unique<CubeIdenticalFace>(CubeIdenticalFace("Stone", blockTypes.size(), stone, glm::vec3(0, 0, 0))));

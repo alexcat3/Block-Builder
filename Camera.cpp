@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Shader.h"
-Camera::Camera(glm::vec3 pos, float fov, float aspect, float zNear, float zFar, GLFWwindow* window) : window(window), pos(pos), yawRad(0.0f), pitchRad(0.0f),
+Camera::Camera(glm::vec3 pos, float fov, float aspect, float zNear, float zFar, GLFWwindow* window) : window(window), pos(pos), yawRad(0.0f), pitchRad(M_PI/2),
     projection(glm::perspective(fov, aspect, zNear, zFar)){
     glfwSetInputMode(window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -26,7 +26,7 @@ void Camera::prepareDrawOverlay(){
 }
 
 glm::vec3 Camera::getDirection(){
-    return glm::vec3(cos(pitchRad)*cos(yawRad), sin(pitchRad), cos(pitchRad)*sin(yawRad));
+    return glm::vec3(sin(pitchRad)*-sin(yawRad), -cos(pitchRad), sin(pitchRad)*-cos(yawRad));
 }
 
 void Camera::rotateRad(float rad){
@@ -36,8 +36,13 @@ void Camera::rotateDeg(float deg) {
     yawRad += glm::radians(deg);
 }
 
+float Camera::getPitchRad(){
+    return pitchRad;
+}
+
+
 void Camera::tiltRad(float rad) {
-    if(pitchRad + rad < M_PI/2 && pitchRad + rad >= -M_PI/2) {
+    if(pitchRad + rad < M_PI && pitchRad + rad >= 0) {
         pitchRad += rad;
     }
 }
@@ -62,7 +67,7 @@ void Camera::takeUserInput() {
     oldMouseX = xPos;
     oldMouseY = yPos;
 
-    rotateDeg(dX*.5);
+    rotateDeg(-dX*.5);
     tiltDeg(-dY*.5);
 
     //Space moves camera up, left shift moves it down

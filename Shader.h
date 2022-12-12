@@ -10,18 +10,23 @@
 #include <fstream>
 #include <optional>
 
+//Represents a compiled shader program
 class Shader {
+    //Id representing the shader program to opengl
     unsigned int shaderProgram;
 
-
+    //Compile a shader of a given type using a given source file
     unsigned static int compileShader(unsigned short shaderType, const char* source);
+    //Link together multiple compiled shaders into a shader program
     unsigned static int makeShaderProgram(const unsigned int shaders[], int n);
 public:
+    //Create a new shader program using the given vertex shader source file and fragment shader source file
     Shader(const std::string &vertexPath, const std::string &fragmentPath) noexcept;
 
+    //The shader which is currently enabled
     static Shader *currentShader;
 
-    //Make it so draw commands use this shader
+    //Make it so draw commands use this shader program
     void enable();
 
     //Set a variable that is used by the shader
