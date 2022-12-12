@@ -1,4 +1,4 @@
-## Block Builder
+## Final Project: Block Builder
 ### By Sean Cunneen
 
 ### Installation:
