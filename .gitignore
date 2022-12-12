@@ -1,3 +1,4 @@
 cmake-build-debug/
 !cmake-build-debug/glfw3.dll
 .idea
+world.wld
