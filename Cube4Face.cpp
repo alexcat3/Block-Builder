@@ -1,12 +1,5 @@
-//
-// Created by alexc on 12/5/2022.
-//
 
 #include "Cube4Face.h"
-//
-// Created by alexc on 11/13/2022.
-//
-
 #include <vector>
 //Vertex data for 4 face cube
 std::vector<float> cube4face_vertices{
