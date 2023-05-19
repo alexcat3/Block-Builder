@@ -1,13 +1,11 @@
 ## BlockBuilder
 ### By Sean Cunneen
 
+BlockBuilder is a simple Minecraft clone, which allows you to build basic structures with blocks.
 
-### About BlockBuilder:
-BlockBuilder is a very basic Minecraft clone, which allows you to build basic structures with blocks.
-
-###Running BlockBuilder
+### Running BlockBuilder
 At present, BlockBuilder only supports 64 bit Windows machines. To run the program, simply
-download the archive download-windows.zip, which contains the program and the auxilliary files
+download the archive [download-windows.zip](https://github.com/alexcat3/Block-Builder/blob/main/download-windows.zip), which contains the program and the auxilliary files
 (textures and DLLs) that it needs to run, extract and open it, enter the program folder, and launch BlockBuilder.exe.
 
 
@@ -32,7 +30,7 @@ download the archive download-windows.zip, which contains the program and the au
 * Exiting
   * To leave the game, press ESCAPE. Your work will automatically be saved.
   
-###Recent Changes
+### Recent Changes
 * The program now saves the world to a file so you can pick up where you left off
 * You rotate the camera and place blocks using the mouse instead of using the keyboard
 * Instead of using official Minecraft textures, it uses textures from the open source PixelPerfectionCE texture pack
