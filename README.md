@@ -1,5 +1,5 @@
 ## BlockBuilder
-### By Sean Cunneen
+#### By Sean Cunneen
 
 BlockBuilder is a simple Minecraft clone, which allows you to build basic structures with blocks.
 
