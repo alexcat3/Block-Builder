@@ -1,9 +1,7 @@
-//
-// Created by alexc on 11/10/2022.
-//
 
 #include "Texture.h"
 #include <stb_image.h>
+#include <cstring>
 
 Texture::Texture(std::string filename, struct TextureOptions options) {
     //Load the image into *data. Get its width and height
