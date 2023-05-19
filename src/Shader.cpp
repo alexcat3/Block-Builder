@@ -4,7 +4,7 @@
 
 #include "Shader.h"
 #include <exception>
-#include "glm/gtc/type_ptr.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 unsigned int Shader::compileShader(unsigned short shaderType, const char* source){
     //Try to compile the shader

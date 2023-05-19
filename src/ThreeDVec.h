@@ -5,7 +5,7 @@
 #ifndef GLFW_TEST_THREEDVEC_H
 #define GLFW_TEST_THREEDVEC_H
 #include <vector>
-#include "glm/glm.hpp"
+#include "../lib/glm/glm.hpp"
 //A 3 dimensional array of a fixed size
 //can be accessed using a vector of coordinates
 template <typename T> class ThreeDVec {

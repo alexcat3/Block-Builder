@@ -1,6 +1,4 @@
-//
-// Created by alexc on 11/26/2022.
-//
+
 
 #include "Block.h"
 

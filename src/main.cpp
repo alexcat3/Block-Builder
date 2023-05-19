@@ -12,7 +12,6 @@
 
 using namespace std;
 
-//Used tutorial https://learnopengl.com/Getting-started/
 //Textures from https://github.com/Athemis/PixelPerfectionCE/tree/master/assets/minecraft
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

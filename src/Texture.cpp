@@ -1,6 +1,6 @@
 
 #include "Texture.h"
-#include <stb_image.h>
+#include "../lib/stb/stb_image.h"
 #include <cstring>
 
 Texture::Texture(std::string filename, struct TextureOptions options) {

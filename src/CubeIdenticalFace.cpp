@@ -1,6 +1,4 @@
-//
-// Created by alexc on 11/13/2022.
-//
+
 
 #include "CubeIdenticalFace.h"
 #include <vector>

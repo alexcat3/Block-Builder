@@ -1,6 +1,4 @@
-//
-// Created by alexc on 11/10/2022.
-//
+
 
 #include "ScreenObject.h"
 #include "glm/gtc/matrix_transform.hpp"

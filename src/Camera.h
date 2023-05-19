@@ -1,11 +1,8 @@
-//
-// Created by alexc on 12/4/2022.
-//
 
 #ifndef GLFW_TEST_CAMERA_H
 #define GLFW_TEST_CAMERA_H
 #include "glm/glm.hpp"
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include "glfw3.h"
 class Camera {
     //The camera's position in the world

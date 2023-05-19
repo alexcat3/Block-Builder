@@ -3,7 +3,7 @@ file(GLOB ROOT_INLINE *.inl)
 file(GLOB ROOT_HEADER *.hpp)
 file(GLOB ROOT_TEXT ../*.txt)
 file(GLOB ROOT_MD ../*.md)
-file(GLOB ROOT_NAT ../../../Downloads/glm/util/glm.natvis)
+file(GLOB ROOT_NAT ../../../../Downloads/glm/util/glm.natvis)
 
 file(GLOB_RECURSE CORE_SOURCE ./detail/*.cpp)
 file(GLOB_RECURSE CORE_INLINE ./detail/*.inl)
@@ -43,7 +43,7 @@ source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
 add_library(glm INTERFACE)
-target_include_directories(glm INTERFACE ../../../Downloads/glm)
+target_include_directories(glm INTERFACE ../../../../Downloads/glm)
 
 if(BUILD_STATIC_LIBS)
 add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}

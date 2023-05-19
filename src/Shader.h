@@ -1,12 +1,9 @@
-//
-// Created by alexc on 11/9/2022.
-//
 
 #ifndef GLFW_TEST_SHADER_H
 #define GLFW_TEST_SHADER_H
 #include <iostream>
 #include <glad/glad.h>
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 #include <fstream>
 #include <optional>
 

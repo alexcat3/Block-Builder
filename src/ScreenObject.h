@@ -1,6 +1,4 @@
-//
-// Created by alexc on 11/10/2022.
-//
+
 
 #ifndef GLFW_TEST_SCREENOBJECT_H
 #define GLFW_TEST_SCREENOBJECT_H

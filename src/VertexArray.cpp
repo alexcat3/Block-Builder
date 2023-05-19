@@ -3,8 +3,8 @@
 //
 
 #include "VertexArray.h"
-#include <glad/glad.h>
-#include <glfw3.h>
+#include "glad/glad.h"
+#include "glfw3.h"
 
 VertexArray::VertexArray(const std::vector<float> &vertices, int vertexLen, const std::vector<unsigned int> &triangleData) {
     numVertices = vertices.size();
