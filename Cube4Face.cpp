@@ -73,7 +73,7 @@ std::vector<unsigned int> cube4face_triangles{
 
 std::optional<VertexArray> Cube4Face::vertexArr;
 
-//If vertexArray has not been initialized, intialize it
+//If vertexArray has not been initialized, initialize it
 //Then returns the value of vertexArray
 VertexArray Cube4Face::getCubeVertexArr(){
     if(vertexArr == std::nullopt){
